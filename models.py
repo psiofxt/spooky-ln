@@ -99,6 +99,9 @@ class Skeleton:
             },
             5: {
                 'sx': 150, 'sy': 0, 'w': 45, 'h': 37, 'col': 0
+            },
+            6: {
+                'sx': 205, 'sy': 0, 'w': 37, 'h': 37, 'col': 0
             }
         }
 
@@ -129,11 +132,13 @@ class Skeleton:
 
     def attack(self):
         i = self.attack_counter
-        pyxel.blt(self.x, self.y - 4, 2, self.attack_models[i]['sx'],
+        pyxel.blt(self.x - 12 if self.direction == 'left' and
+                  (self.attack_counter == 5 or self.attack_counter == 6) else self.x,
+                  self.y - 4, 2, self.attack_models[i]['sx'],
                   self.attack_models[i]['sy'],
                   self.attack_models[i]['w'] if self.direction == 'right'
                                            else self.attack_models[i]['w'] * -1,
                   self.attack_models[i]['h'], self.attack_models[i]['col'])
-        self.attack_counter += 1 if pyxel.frame_count % 4 == 0 else 0
-        if self.attack_counter == 6:
+        self.attack_counter += 1 if pyxel.frame_count % 3 == 0 else 0
+        if self.attack_counter == 7:
             self.attack_counter = 1
