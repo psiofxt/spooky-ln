@@ -16,23 +16,26 @@ class App:
         self.update_player()
 
     def update_player(self):
-        if pyxel.btnp(pyxel.KEY_LEFT, 10, 1) or pyxel.btnp(pyxel.KEY_RIGHT, 10, 1):
-            self.player.idling = False
+        if pyxel.btnp(pyxel.KEY_SPACE, 1, 1):
+            self.player.state = 2
         else:
-            self.player.idling = True
+            self.player.state = 0
 
-        if pyxel.btn(pyxel.KEY_LEFT):
+        if pyxel.btn(pyxel.KEY_A):
+            self.player.state = 1
             self.player.direction = 'left'
             self.player.x = max(self.player.x - 2, 0)
 
-        if pyxel.btn(pyxel.KEY_RIGHT):
+        if pyxel.btn(pyxel.KEY_D):
+            self.player.state = 1
             self.player.direction = 'right'
             self.player.x = min(self.player.x + 2, pyxel.width - 20)
 
     def draw(self):
-        pyxel.cls(13)
-        pyxel.text(55, 41, 'spooky-ln', pyxel.frame_count % 16)
-        pyxel.text(55, 41 + 10, f'frame: {pyxel.frame_count}', pyxel.frame_count % 16)
-        self.player.idle() if self.player.idling else self.player.walk()
+        pyxel.cls(14)
+        pyxel.text(0, 0, 'spooky-ln', pyxel.frame_count % 16)
+        pyxel.text(0, 0 + 10, f'frame: {pyxel.frame_count}', pyxel.frame_count % 16)
+
+        getattr(self.player, self.player.states[self.player.state])()
 
 App()
