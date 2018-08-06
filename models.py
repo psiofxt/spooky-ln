@@ -8,9 +8,21 @@ class Skeleton:
         self.direction = 'right'
         self.idle_counter = 1
         self.walk_counter = 1
-        self.idling = True
+        self.attack_counter = 1
+        self.state = 0
+        self.states = {
+            0: 'idle',
+            1: 'walk',
+            2: 'attack'
+        }
+        # idle animation
         pyxel.image(0).load(0, 0, 'assets/skeleton/Skeleton Idle.png')
+
+        # walk animation
         pyxel.image(1).load(0, 0, 'assets/skeleton/Skeleton Walk.png')
+
+        # attack animation
+        pyxel.image(2).load(0, 0, 'assets/skeleton/attack_256.png')
 
         self.idle_models = {
             1: {
@@ -72,7 +84,28 @@ class Skeleton:
             },
         }
 
+        self.attack_models = {
+            1: {
+                'sx': 0, 'sy': 0, 'w': 30, 'h': 37, 'col': 0
+            },
+            2: {
+                'sx': 46, 'sy': 0, 'w': 26, 'h': 37, 'col': 0
+            },
+            3: {
+                'sx': 80, 'sy': 0, 'w': 26, 'h': 37, 'col': 0
+            },
+            4: {
+                'sx': 122, 'sy': 0, 'w': 27, 'h': 37, 'col': 0
+            },
+            5: {
+                'sx': 150, 'sy': 0, 'w': 45, 'h': 37, 'col': 0
+            }
+        }
+
     def idle(self):
+        self.walk_counter = 1
+        self.attack_counter = 1
+
         i = self.idle_counter
         pyxel.blt(self.x, self.y, 0, self.idle_models[i]['sx'],
                   self.idle_models[i]['sy'],
@@ -93,3 +126,14 @@ class Skeleton:
         self.walk_counter += 1 if pyxel.frame_count % 2 == 0 else 0
         if self.walk_counter == 11:
             self.walk_counter = 1
+
+    def attack(self):
+        i = self.attack_counter
+        pyxel.blt(self.x, self.y - 4, 2, self.attack_models[i]['sx'],
+                  self.attack_models[i]['sy'],
+                  self.attack_models[i]['w'] if self.direction == 'right'
+                                           else self.attack_models[i]['w'] * -1,
+                  self.attack_models[i]['h'], self.attack_models[i]['col'])
+        self.attack_counter += 1 if pyxel.frame_count % 4 == 0 else 0
+        if self.attack_counter == 6:
+            self.attack_counter = 1
