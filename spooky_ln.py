@@ -5,7 +5,7 @@ from models import Skeleton
 
 class App:
     def __init__(self):
-        pyxel.init(160, 120, caption='Spooky and Frightening')
+        pyxel.init(256, 120, caption='Spooky and Frightening')
         self.player = Skeleton()
         pyxel.run(self.update, self.draw)
 
