@@ -120,6 +120,9 @@ class Skeleton:
             self.idle_counter = 1
 
     def walk(self):
+        self.attack_counter = 1
+        self.idle_counter = 1
+
         i = self.walk_counter
         pyxel.blt(self.x, self.y, 1, self.walk_models[i]['sx'],
                   self.walk_models[i]['sy'],
@@ -131,6 +134,9 @@ class Skeleton:
             self.walk_counter = 1
 
     def attack(self):
+        self.walk_counter = 1
+        self.idle_counter = 1
+
         i = self.attack_counter
         pyxel.blt(self.x - 12 if self.direction == 'left' and
                   (self.attack_counter == 5 or self.attack_counter == 6) else self.x,
