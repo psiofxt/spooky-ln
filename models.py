@@ -148,3 +148,4 @@ class Skeleton:
         self.attack_counter += 1 if pyxel.frame_count % 3 == 0 else 0
         if self.attack_counter == 7:
             self.attack_counter = 1
+            self.state = 0

@@ -16,10 +16,11 @@ class App:
         self.update_player()
 
     def update_player(self):
-        if pyxel.btnp(pyxel.KEY_SPACE, 1, 1):
+        if pyxel.btnp(pyxel.KEY_LEFT_BUTTON, 1, 1):
             # player is attacking
             self.player.state = 2
-        elif self.player.attack_counter > 3 and self.player.state == 2:
+            return
+        elif self.player.state == 2:
             # player is still in an attack animation
             return
         else:
@@ -31,12 +32,14 @@ class App:
             self.player.state = 1
             self.player.direction = 'left'
             self.player.x = max(self.player.x - 2, 0)
+            return
 
         if pyxel.btn(pyxel.KEY_D):
             # player is moving right
             self.player.state = 1
             self.player.direction = 'right'
             self.player.x = min(self.player.x + 2, pyxel.width - 20)
+            return
 
     def draw(self):
         pyxel.cls(14)
