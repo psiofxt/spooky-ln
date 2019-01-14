@@ -5,7 +5,7 @@ from models import Skeleton
 
 class App:
     def __init__(self):
-        pyxel.init(256, 120, caption='Spooky and Frightening')
+        pyxel.init(255, 120, caption='Spooky and Frightening')
         self.player = Skeleton()
         pyxel.run(self.update, self.draw)
 
@@ -16,7 +16,7 @@ class App:
         self.update_player()
 
     def update_player(self):
-        if pyxel.btnp(pyxel.KEY_LEFT_BUTTON, 1, 1):
+        if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON, 1, 1):
             # player is attacking
             self.player.state = 2
             return
@@ -42,7 +42,7 @@ class App:
             return
 
     def draw(self):
-        pyxel.cls(14)
+        pyxel.cls(15)
         pyxel.text(0, 0, 'spooky-ln', pyxel.frame_count % 16)
         pyxel.text(0, 0 + 10, f'frame: {pyxel.frame_count}', pyxel.frame_count % 16)
 
