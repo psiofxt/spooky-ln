@@ -1,12 +1,13 @@
 import pyxel
 import random
 
-from models import Skeleton
+from models import Hero, One_Bit
 
 class App:
     def __init__(self):
-        pyxel.init(255, 120, caption='Spooky and Frightening')
-        self.player = Skeleton()
+        pyxel.init(255, 255, caption='Spooky and Frightening')
+        self.one_bit = One_Bit()
+        self.hero = Hero()
         pyxel.run(self.update, self.draw)
 
     def update(self):
@@ -16,36 +17,36 @@ class App:
         self.update_player()
 
     def update_player(self):
-        if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON, 1, 1):
-            # player is attacking
-            self.player.state = 2
-            return
-        elif self.player.state == 2:
-            # player is still in an attack animation
-            return
-        else:
-            # player is idle
-            self.player.state = 0
-
-        if pyxel.btn(pyxel.KEY_A):
-            # player is moving left
-            self.player.state = 1
-            self.player.direction = 'left'
-            self.player.x = max(self.player.x - 2, 0)
-            return
+        if self.hero.state[5:] == 'right' or self.hero.state[5:] == 'left':
+            self.hero.state = 'idle' + '_' + self.hero.state[5:]
 
         if pyxel.btn(pyxel.KEY_D):
             # player is moving right
-            self.player.state = 1
-            self.player.direction = 'right'
-            self.player.x = min(self.player.x + 2, pyxel.width - 20)
+            self.hero.state = 'walk_right'
+            self.hero.x = min(self.hero.x + 2, pyxel.width - 20)
+            return
+
+        if pyxel.btn(pyxel.KEY_A):
+            # player is moving left
+            self.hero.state = 'walk_left'
+            self.hero.x = max(self.hero.x - 2, 0)
+            return
+
+        if pyxel.btn(pyxel.KEY_W):
+            self.hero.state = 'walk_up'
+            self.hero.y = max(self.hero.y - 2, -10)
+            return
+
+        if pyxel.btn(pyxel.KEY_S):
+            self.hero.state = 'walk_down'
+            self.hero.y = min(self.hero.y + 2, pyxel.height - 20)
             return
 
     def draw(self):
-        pyxel.cls(15)
-        pyxel.text(0, 0, 'spooky-ln', pyxel.frame_count % 16)
-        pyxel.text(0, 0 + 10, f'frame: {pyxel.frame_count}', pyxel.frame_count % 16)
-
-        getattr(self.player, self.player.states[self.player.state])()
+        pyxel.cls(7)
+        pyxel.pal(1, 0)
+        pyxel.text(200, 230, 'x: {}\ny: {}'.format(self.hero.x, self.hero.y), 1)
+        self.one_bit.draw()
+        self.hero.draw()
 
 App()

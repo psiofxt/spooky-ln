@@ -1,151 +1,83 @@
 import pyxel
+import random
 
 
-class Skeleton:
+class Hero():
     def __init__(self):
         self.x = 0
-        self.y = 88
-        self.direction = 'right'
-        self.idle_counter = 1
-        self.walk_counter = 1
-        self.attack_counter = 1
-        self.state = 0
-        self.states = {
-            0: 'idle',
-            1: 'walk',
-            2: 'attack'
-        }
-        # idle animation
-        pyxel.image(0).load(0, 0, 'assets/skeleton/Skeleton Idle.png')
-
-        # walk animation
-        pyxel.image(1).load(0, 0, 'assets/skeleton/Skeleton Walk.png')
-
-        # attack animation
-        pyxel.image(2).load(0, 0, 'assets/skeleton/attack_256.png')
-
-        self.idle_models = {
-            1: {
-                'sx': 0, 'sy': 0, 'w': 24, 'h': 32, 'col': 0
-            },
-            2: {
-                'sx': 24, 'sy': 0, 'w': 24, 'h': 32, 'col': 0
-            },
-            3: {
-                'sx': 48, 'sy': 0, 'w': 24, 'h': 32, 'col': 0
-            },
-            4: {
-                'sx': 72, 'sy': 0, 'w': 24, 'h': 32, 'col': 0
-            },
-            5: {
-                'sx': 96, 'sy': 0, 'w': 24, 'h': 32, 'col': 0
-            },
-            6: {
-                'sx': 120, 'sy': 0, 'w': 24, 'h': 32, 'col': 0
-            },
+        self.y = 52
+        self.walk_counter = 0
+        self.state = 'idle_right'
+        self.models = {
+            'idle_right': [
+                [0, 0, 0, 16, 16, 0]
+            ],
+            'idle_left': [
+                [0, 0, 0, -16, 16, 0]
+            ],
+            'walk_right': [
+                [0, 0, 0, 16, 16, 0]
+            ],
+            'walk_left': [
+                [0, 0, 0, -16, 16, 0]
+            ],
+            'walk_down': [
+                [0, 0, 0, 16, 16, 0]
+            ],
+            'walk_up': [
+                [0, 0, 0, 16, 16, 0]
+            ]
         }
 
-        self.walk_models = {
-            1: {
-                'sx': 0, 'sy': 0, 'w': 22, 'h': 33, 'col': 0
-            },
-            2: {
-                'sx': 22, 'sy': 0, 'w': 22, 'h': 33, 'col': 0
-            },
-            3: {
-                'sx': 44, 'sy': 0, 'w': 22, 'h': 33, 'col': 0
-            },
-            4: {
-                'sx': 88, 'sy': 0, 'w': 22, 'h': 33, 'col': 0
-            },
-            5: {
-                'sx': 110, 'sy': 0, 'w': 22, 'h': 33, 'col': 0
-            },
-            6: {
-                'sx': 132, 'sy': 0, 'w': 22, 'h': 33, 'col': 0
-            },
-            7: {
-                'sx': 154, 'sy': 0, 'w': 22, 'h': 33, 'col': 0
-            },
-            8: {
-                'sx': 176, 'sy': 0, 'w': 22, 'h': 33, 'col': 0
-            },
-            9: {
-                'sx': 198, 'sy': 0, 'w': 22, 'h': 33, 'col': 0
-            },
-            10: {
-                'sx': 220, 'sy': 0, 'w': 22, 'h': 33, 'col': 0
-            },
-            11: {
-                'sx': 242, 'sy': 0, 'w': 22, 'h': 33, 'col': 0
-            },
-            12: {
-                'sx': 264, 'sy': 0, 'w': 22, 'h': 33, 'col': 0
-            },
+    def draw(self):
+        if self.state[:4] == 'walk':
+            pyxel.blt(self.x, self.y, *self.models[self.state][self.walk_counter])
+        else:
+            pyxel.blt(self.x, self.y, *self.models[self.state][self.walk_counter])
+
+class One_Bit():
+    def __init__(self):
+        pyxel.image(0).load(0, 0, 'assets/1bit_env2.png')
+        self.models = {
+            'pine_group_1': [0, 80, 128, 32, 48, 0],
+            'pine_group_2': [0, 208, 48, 32, 48, 0],
+            'pine_single': [0, 48, 144, 32, 32, 0],
+            'pine_single_bare': [0, 112, 144, 32, 32, 0],
+            'grass_2': [0, 80, 0, 16, 16, 0],
+            'grass_4': [0, 80, 16, 16, 16, 0],
+            'tower_cone': [0, 144, 128, 16, 48, 0],
+            'tower_broken': [0, 208, 96, 32, 64, 0],
+            'rock_wall_1': [0, 16, 96, 16, 16, 0],
+            'rock_wall_2': [0, 32, 96, 16, 16, 0]
         }
 
-        self.attack_models = {
-            1: {
-                'sx': 0, 'sy': 0, 'w': 30, 'h': 37, 'col': 0
-            },
-            2: {
-                'sx': 46, 'sy': 0, 'w': 26, 'h': 37, 'col': 0
-            },
-            3: {
-                'sx': 80, 'sy': 0, 'w': 26, 'h': 37, 'col': 0
-            },
-            4: {
-                'sx': 122, 'sy': 0, 'w': 27, 'h': 37, 'col': 0
-            },
-            5: {
-                'sx': 150, 'sy': 0, 'w': 45, 'h': 37, 'col': 0
-            },
-            6: {
-                'sx': 205, 'sy': 0, 'w': 37, 'h': 37, 'col': 0
-            }
-        }
+    def draw(self):
+        pyxel.blt(40, 40, *self.models['pine_single'])
+        pyxel.blt(70, 0, *self.models['pine_single_bare'])
+        pyxel.blt(10, 176, *self.models['pine_single'])
+        pyxel.blt(20, 40, *self.models['grass_2'])
+        pyxel.blt(60, 38, *self.models['grass_2'])
+        pyxel.blt(20, 60, *self.models['grass_4'])
+        pyxel.blt(30, 80, *self.models['grass_4'])
+        pyxel.blt(-10, 0, *self.models['pine_group_1'])
+        pyxel.blt(0, 216, *self.models['pine_group_1'])
+        pyxel.blt(226, 2, *self.models['pine_group_1'])
+        pyxel.blt(20, -10, *self.models['pine_group_1'])
+        pyxel.blt(38, 148, *self.models['pine_group_1'])
+        pyxel.blt(60, -10, *self.models['tower_cone'])
+        pyxel.blt(-10, 80, *self.models['pine_group_1'])
+        pyxel.blt(-15, 120, *self.models['pine_group_1'])
 
-    def idle(self):
-        self.walk_counter = 1
-        self.attack_counter = 1
+        pyxel.blt(66, 172, *self.models['rock_wall_1'])
+        pyxel.blt(82, 172, *self.models['rock_wall_2'])
 
-        i = self.idle_counter
-        pyxel.blt(self.x, self.y, 0, self.idle_models[i]['sx'],
-                  self.idle_models[i]['sy'],
-                  self.idle_models[i]['w'] if self.direction == 'right'
-                                           else self.idle_models[i]['w'] * -1,
-                  self.idle_models[i]['h'], self.idle_models[i]['col'])
-        self.idle_counter += 1 if pyxel.frame_count % 4 == 0 else 0
-        if self.idle_counter == 7:
-            self.idle_counter = 1
+        pyxel.blt(98, 172, *self.models['rock_wall_1'])
+        pyxel.blt(114, 172, *self.models['rock_wall_2'])
 
-    def walk(self):
-        self.attack_counter = 1
-        self.idle_counter = 1
+        pyxel.blt(130, 172, *self.models['rock_wall_1'])
+        pyxel.blt(146, 172, *self.models['rock_wall_2'])
 
-        i = self.walk_counter
-        pyxel.blt(self.x, self.y, 1, self.walk_models[i]['sx'],
-                  self.walk_models[i]['sy'],
-                  self.walk_models[i]['w'] if self.direction == 'right'
-                                           else self.walk_models[i]['w'] * -1,
-                  self.walk_models[i]['h'], self.walk_models[i]['col'])
-        self.walk_counter += 1 if pyxel.frame_count % 2 == 0 else 0
-        if self.walk_counter == 11:
-            self.walk_counter = 1
+        pyxel.blt(162, 172, *self.models['rock_wall_1'])
+        pyxel.blt(178, 172, *self.models['rock_wall_2'])
 
-    def attack(self):
-        self.walk_counter = 1
-        self.idle_counter = 1
-
-        i = self.attack_counter
-        pyxel.blt(self.x - 12 if self.direction == 'left' and
-                  (self.attack_counter == 5 or self.attack_counter == 6) else self.x,
-                  self.y - 4, 2, self.attack_models[i]['sx'],
-                  self.attack_models[i]['sy'],
-                  self.attack_models[i]['w'] if self.direction == 'right'
-                                           else self.attack_models[i]['w'] * -1,
-                  self.attack_models[i]['h'], self.attack_models[i]['col'])
-        self.attack_counter += 1 if pyxel.frame_count % 3 == 0 else 0
-        if self.attack_counter == 7:
-            self.attack_counter = 1
-            self.state = 0
+        pyxel.blt(192, 130, *self.models['tower_broken'])
